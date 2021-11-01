@@ -1,26 +1,42 @@
 // On fait du fonctionnel donc on met toutes les variables dans des fonctions.
 main();
 
-function main() {
+async function main() {
     // récupération des produits
-    const products = getProducts();
+    const products = await getProducts();
     // Affichage de tout les produits
-    displayAllProducts(products);
+    for (product of products) {
+        displayProduct(product);
+    }
 }
 
 function getProducts() {
     //récupération des données
-    fetch("http://localhost:3000/api/products")
-        .then(function (httpApiResponse) {
-            // transformation de la réponse en Json
-            return httpApiResponse.json();
-        })
-        // on récupere les données dans le then suivant graçe au return dans le then précédent.
-        .then(function (products) {
-            console.log(products);
-        });
+    return (
+        fetch("http://localhost:3000/api/products")
+            .then(function (httpApiResponse) {
+                // transformation de la réponse en Json
+                return httpApiResponse.json();
+            })
+            // on récupere les données dans le then suivant graçe au return dans le then précédent.
+            .then(function (products) {
+                return products;
+            })
+            // Alerte en cas d'erreur
+            .catch(function (error) {
+                alert(error);
+            })
+    );
 }
-
-function displayAllProducts() {
-    return "";
+// Affichage d'un seul produit
+function displayProduct() {
+    document.getElementById(
+        "items"
+    ).innerHTML += `<a href="product.html?id=${product._id}">
+    <article>
+        <img src="${product.imageUrl}" alt="Photographie d'un canapé Kanap ${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+    </article>
+</a>`;
 }
