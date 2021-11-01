@@ -1,14 +1,14 @@
 // On fait du fonctionnel donc on met toutes les variables dans des fonctions.
-main();
 
-async function main() {
+// fonction autoappelée
+(async function () {
     // récupération des produits
     const products = await getProducts();
     // Affichage de tout les produits
     for (product of products) {
         displayProduct(product);
     }
-}
+})();
 
 function getProducts() {
     //récupération des données
