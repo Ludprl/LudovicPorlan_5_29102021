@@ -1,3 +1,32 @@
+class cart {
+    // récupérer le contenu du panier
+    static getCart() {
+        let cart = localStorage.getItem("cart");
+        return cart != null ? JSON.parse(cart) : [];
+    }
+    // Ajouter un produit au panier (id, color, qty, price)
+    static add(product) {
+        let cart = this.getCart();
+        let productFound = cart.find(
+            (p) => p._id == product._id && p.color == product.color
+        );
+        // Vérification des quantités max et incrémentation si déjà présent
+        if (productFound != null) {
+            productFound.quantity += product.quantity;
+            if (product.quantity > 100) {
+                product.quantity = 100;
+            }
+        } else {
+            cart.push(product);
+        }
+        this.save(cart);
+    }
+    // Enregistrer le panier
+    static save(cart) {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }
+}
+
 (async function () {
     const productId = getProductId();
     const product = await getProduct(productId);
@@ -30,6 +59,7 @@ function getProduct(productId) {
 
 // On peuple la page avec les informations récupérées
 function injectProduct(product) {
+    document.title = product.name;
     let item = document.querySelector(".item");
     item.querySelector(".item__img").insertAdjacentHTML(
         "afterbegin",
@@ -54,4 +84,18 @@ function injectProduct(product) {
             .map((color) => `<option value="${color}">${color}</option>`)
             .join()
     );
+    // Ajout au panier en vérifiant les saisies de l'utilisateur.
+    document.querySelector("#addToCart").addEventListener("click", function () {
+        if (
+            document.querySelector("#quantity").reportValidity() &&
+            document.querySelector("#colors").reportValidity()
+        ) {
+            product.quantity = parseInt(
+                document.querySelector("#quantity").value
+            );
+            product.color = document.querySelector("#colors").value;
+            cart.add(product);
+            window.location.assign("cart.html");
+        }
+    });
 }
