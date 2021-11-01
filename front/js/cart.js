@@ -6,8 +6,18 @@ class cart {
     }
     // modifier les quantités
     // supprimer un élèment du panier
-    // Enregistrer le panier
-    static save(cart) {
+    static remove(product) {
+        let cart = this.getCart();
+        let seekProduct = cart.find(
+            (p) => p._id == product._id && p.color == product.color
+        );
+        // Vérification des quantités max et décrémentation si déjà présent
+        if (seekProduct != null) {
+            seekProduct.quantity = --product.quantity;
+            if ((product.quantity = 0)) {
+                // Retirer l'item du localstorage !!!!!!
+            }
+        }
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 }
@@ -45,4 +55,11 @@ function displayCartsProduct() {
         </div>
     </div>
 </article>`;
+
+    document.querySelectorAll(".deleteItem").forEach((item) => {
+        item.addEventListener("click", (event) => {
+            cart.remove(product);
+            window.location.assign("cart.html");
+        });
+    });
 }

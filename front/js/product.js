@@ -7,22 +7,18 @@ class cart {
     // Ajouter un produit au panier (id, color, qty, price)
     static add(product) {
         let cart = this.getCart();
-        let productFound = cart.find(
+        let seekProduct = cart.find(
             (p) => p._id == product._id && p.color == product.color
         );
         // Vérification des quantités max et incrémentation si déjà présent
-        if (productFound != null) {
-            productFound.quantity += product.quantity;
+        if (seekProduct != null) {
+            seekProduct.quantity += product.quantity;
             if (product.quantity > 100) {
                 product.quantity = 100;
             }
         } else {
             cart.push(product);
         }
-        this.save(cart);
-    }
-    // Enregistrer le panier
-    static save(cart) {
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 }
