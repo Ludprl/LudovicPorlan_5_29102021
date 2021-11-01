@@ -9,7 +9,16 @@ function main() {
 }
 
 function getProducts() {
-    return "";
+    //récupération des données
+    fetch("http://localhost:3000/api/products")
+        .then(function (httpApiResponse) {
+            // transformation de la réponse en Json
+            return httpApiResponse.json();
+        })
+        // on récupere les données dans le then suivant graçe au return dans le then précédent.
+        .then(function (products) {
+            console.log(products);
+        });
 }
 
 function displayAllProducts() {
