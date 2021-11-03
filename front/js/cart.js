@@ -12,11 +12,11 @@ class cart {
             (p) => p._id == product._id && p.color == product.color
         );
         // Vérification des quantités max et décrémentation si déjà présent
-        if (seekProduct != null) {
-            seekProduct.quantity = --product.quantity;
-            if ((product.quantity = 0)) {
-                // Retirer l'item du localstorage !!!!!!
-            }
+        seekProduct.quantity = --product.quantity;
+        if (seekProduct.quantity <= 0) {
+            cart = cart.filter(
+                (p) => p._id != product._id || p.color != product.color
+            );
         }
         localStorage.setItem("cart", JSON.stringify(cart));
     }
