@@ -6,19 +6,21 @@ class cart {
     }
     // modifier les quantités
     // supprimer un élèment du panier
-    static remove(product) {
+    static remove(productId, productColor) {
         let cart = this.getCart();
-        let seekProduct = cart.find(
-            (p) => p._id == product._id && p.color == product.color
+        cart = cart.filter(
+            (p) => p._id == productId && p.color == productColor
         );
-        // Vérification des quantités max et décrémentation si déjà présent
-        seekProduct.quantity = --product.quantity;
-        if (seekProduct.quantity <= 0) {
-            cart = cart.filter(
-                (p) => p._id != product._id || p.color != product.color
-            );
-        }
         localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    static updateQuantity(productId, productQuantity) {
+        let cart = this.getCart();
+        cart = cart.map((p) => {
+            if (p._id == productId) p.quantity = productQuantity;
+            return p;
+        });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        //if (productQuantity <= 0) self::remove();
     }
 }
 
@@ -29,12 +31,14 @@ class cart {
     for (product of productsInCart) {
         displayCartsProduct(product);
     }
+    onDeleteCartItem();
+    onUpdateQuantity();
 })();
 
 function displayCartsProduct() {
     document.getElementById(
         "cart__items"
-    ).innerHTML += `<article class="cart__item" data-id="${product._id}" data-color="${product.color}">
+    ).innerHTML += `<article id="cart-item-${product._id}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
     <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
     </div>
@@ -47,19 +51,37 @@ function displayCartsProduct() {
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
                 <p>Qté : </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                <input type="number" data-id="${product._id}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
             </div>
             <div class="cart__item__content__settings__delete">
-                <p class="deleteItem" id="[item_Id]">Supprimer</p>
+                <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
             </div>
         </div>
     </div>
 </article>`;
+}
 
+function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
-            cart.remove(product);
-            window.location.assign("cart.html");
+            const productId = event.target.getAttribute("data-id");
+            const productColor = event.target.getAttribute("data-color");
+            event.preventDefault();
+            cart.remove(productId, productColor);
+            document.getElementById("cart-item-" + productId).remove();
+        });
+    });
+}
+function onUpdateQuantity() {
+    document.querySelectorAll(".itemQuantity").forEach((item) => {
+        item.addEventListener("change", (event) => {
+            const productId = event.target.getAttribute("data-id");
+            const productQuantity = event.target.value;
+            console.log(productQuantity);
+            event.preventDefault();
+            cart.updateQuantity(productId, productQuantity);
+            if (productQuantity <= 0)
+                document.getElementById("cart-item-" + productId).remove();
         });
     });
 }
