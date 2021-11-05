@@ -9,7 +9,7 @@ class cart {
     static remove(productId, productColor) {
         let cart = this.getCart();
         cart = cart.filter(
-            (p) => p._id == productId && p.color == productColor
+            (p) => p._id !== productId && p.color !== productColor
         );
         localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -71,6 +71,7 @@ function onDeleteCartItem() {
             event.preventDefault();
             cart.remove(productId, productColor);
             document.getElementById("cart-item-" + productId).remove();
+            totals();
         });
     });
 }
@@ -110,9 +111,14 @@ function totals() {
     }
     let productsTotalPrice = document.getElementById("totalPrice");
     productsTotalPrice.innerHTML = totalPrice;
-    // Mise à jour prix total si changement de quantité
+    // Mise à jour prix total si changement de quantité ou suppression d'un produit
     document.querySelectorAll(".itemQuantity").forEach((item) => {
         item.addEventListener("change", (event) => {
+            totals();
+        });
+    });
+    document.querySelectorAll(".deleteItem").forEach((item) => {
+        item.addEventListener("click", (event) => {
             totals();
         });
     });

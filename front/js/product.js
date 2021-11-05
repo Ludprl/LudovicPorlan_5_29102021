@@ -61,25 +61,24 @@ function injectProduct(product) {
         "afterbegin",
         `<img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">`
     );
-
     item.querySelector("#title").insertAdjacentHTML("afterbegin", product.name);
-
     item.querySelector("#price").insertAdjacentHTML(
         "afterbegin",
         product.price
     );
-
     item.querySelector("#description").insertAdjacentHTML(
         "afterbegin",
         product.description
     );
-
     item.querySelector("#colors").insertAdjacentHTML(
         "beforeend",
         product.colors
             .map((color) => `<option value="${color}">${color}</option>`)
             .join()
     );
+    // Ajout obligation de choisir une couleur.
+    let colorDropdownMenu = document.querySelector("#colors");
+    colorDropdownMenu.setAttribute("required", "");
     // Ajout au panier en vérifiant les saisies de l'utilisateur.
     document.querySelector("#addToCart").addEventListener("click", function () {
         if (
