@@ -33,8 +33,10 @@ class cart {
     }
     onDeleteCartItem();
     onUpdateQuantity();
+    totals();
 })();
 
+// Affichage du panier
 function displayCartsProduct() {
     document.getElementById(
         "cart__items"
@@ -60,7 +62,7 @@ function displayCartsProduct() {
     </div>
 </article>`;
 }
-
+// On supprime l'element du panier lors du clique sur le bouton "supprimer"
 function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
@@ -72,16 +74,46 @@ function onDeleteCartItem() {
         });
     });
 }
+// mise à jour de la quantité lors du changement de valeur dans l'input.
 function onUpdateQuantity() {
     document.querySelectorAll(".itemQuantity").forEach((item) => {
         item.addEventListener("change", (event) => {
             const productId = event.target.getAttribute("data-id");
+            const productColor = event.target.getAttribute("data-color");
             const productQuantity = event.target.value;
-            console.log(productQuantity);
             event.preventDefault();
             cart.updateQuantity(productId, productQuantity);
-            if (productQuantity <= 0)
+            // Si la quantité saisie est 0 alors on supprime l'article.
+            if (productQuantity <= 0) {
+                cart.remove(productId, productColor);
                 document.getElementById("cart-item-" + productId).remove();
+            }
+        });
+    });
+}
+
+function totals() {
+    let finalCart = cart.getCart();
+    // Récupération du total des quantités
+    let totalProductsInCart = document.getElementsByClassName("itemQuantity");
+    let customerLength = totalProductsInCart.length,
+        totalQtt = 0;
+    for (let i = 0; i < customerLength; ++i) {
+        totalQtt += totalProductsInCart[i].valueAsNumber;
+    }
+    let productsTotalQuantity = document.getElementById("totalQuantity");
+    productsTotalQuantity.innerHTML = totalQtt;
+    // Récupération du prix total
+    totalPrice = 0;
+    for (let i = 0; i < customerLength; ++i) {
+        totalPrice += totalProductsInCart[i].valueAsNumber * finalCart[i].price;
+    }
+    let productsTotalPrice = document.getElementById("totalPrice");
+    productsTotalPrice.innerHTML = totalPrice;
+    // Mise à jour prix total si changement de quantité
+    document.querySelectorAll(".itemQuantity").forEach((item) => {
+        item.addEventListener("change", (event) => {
+            totals();
         });
     });
 }
