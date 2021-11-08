@@ -136,10 +136,10 @@ async function postOrder() {
         let inputCity = document.getElementById("city");
         let inputMail = document.getElementById("email");
 
-        //Construction d'un array contenant les ID des produits du panier
+        //récupération en dans Array des ID produits du panier
         let productsId = finalCart.map((product) => product._id);
         console.log(productsId);
-
+        // récupération des données
         const customerOrder = {
             contact: {
                 firstName: inputName.value,
@@ -150,6 +150,7 @@ async function postOrder() {
             },
             products: productsId,
         };
+        //Construction de la requete POST
         const dataToApi = {
             method: "POST",
             headers: {
