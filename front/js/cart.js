@@ -35,7 +35,6 @@ class cart {
     onUpdateQuantity();
     totals();
 })();
-
 // Affichage du panier
 function displayCartsProduct() {
     document.getElementById(
@@ -92,7 +91,6 @@ function onUpdateQuantity() {
         });
     });
 }
-
 function totals() {
     let finalCart = cart.getCart();
     // Récupération du total des quantités
@@ -125,7 +123,7 @@ function totals() {
 }
 
 //Envoi des informations client au localstorage
-function postOrder() {
+async function postOrder() {
     let finalCart = cart.getCart();
     const orderBouton = document.getElementById("order");
 
@@ -159,17 +157,21 @@ function postOrder() {
             },
             body: JSON.stringify(customerOrder),
         };
-        console.log(customerOrder);
+        console.log(dataToApi);
 
-        fetch("http://localhost:3000/api/products/order/", dataToApi)
+        let apiResponse = fetch(
+            "http://localhost:3000/api/products/order",
+            dataToApi
+        )
             .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
+            .then(function (data) {
                 localStorage.setItem("orderId", data.orderId);
+                console.log(data);
             })
             .catch((err) => {
                 alert("Problème avec fetch lors de l'envoi de commande");
             });
+        console.log(apiResponse);
     });
 }
 postOrder();
