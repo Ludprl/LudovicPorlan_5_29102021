@@ -126,9 +126,9 @@ function totals() {
 async function postOrder() {
     let finalCart = cart.getCart();
     const orderBouton = document.getElementById("order");
-
     //Déclenchement par le click sur le bouton commander panier
     orderBouton.addEventListener("click", (event) => {
+        event.preventDefault();
         //Récupération des informations client
         let inputName = document.getElementById("firstName");
         let inputLastName = document.getElementById("lastName");
@@ -154,11 +154,11 @@ async function postOrder() {
         const dataToApi = {
             method: "POST",
             headers: {
+                Accept: "application/json",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(customerOrder),
         };
-        console.log(dataToApi);
 
         let apiResponse = fetch(
             "http://localhost:3000/api/products/order",
@@ -166,13 +166,13 @@ async function postOrder() {
         )
             .then((response) => response.json())
             .then(function (data) {
+                localStorage.clear();
                 localStorage.setItem("orderId", data.orderId);
-                console.log(data);
+                document.location.href = "confirmation.html";
             })
             .catch((err) => {
                 alert("Problème avec fetch lors de l'envoi de commande");
             });
-        console.log(apiResponse);
     });
 }
 postOrder();
