@@ -4,7 +4,6 @@ class cart {
         let cart = localStorage.getItem("cart");
         return cart != null ? JSON.parse(cart) : [];
     }
-    // modifier les quantités
     // supprimer un élèment du panier
     static remove(productId, productColor) {
         let cart = this.getCart();
@@ -13,6 +12,7 @@ class cart {
         );
         localStorage.setItem("cart", JSON.stringify(cart));
     }
+    // modifier les quantités
     static updateQuantity(productId, productQuantity) {
         let cart = this.getCart();
         cart = cart.map((p) => {
@@ -123,3 +123,53 @@ function totals() {
         });
     });
 }
+
+//Envoi des informations client au localstorage
+function postOrder() {
+    let finalCart = cart.getCart();
+    const orderBouton = document.getElementById("order");
+
+    //Déclenchement par le click sur le bouton commander panier
+    orderBouton.addEventListener("click", (event) => {
+        //Récupération des informations client
+        let inputName = document.getElementById("firstName");
+        let inputLastName = document.getElementById("lastName");
+        let inputAdress = document.getElementById("address");
+        let inputCity = document.getElementById("city");
+        let inputMail = document.getElementById("email");
+
+        //Construction d'un array contenant les ID des produits du panier
+        let productsId = finalCart.map((product) => product._id);
+        console.log(productsId);
+
+        const customerOrder = {
+            contact: {
+                firstName: inputName.value,
+                lastName: inputLastName.value,
+                address: inputAdress.value,
+                city: inputCity.value,
+                email: inputMail.value,
+            },
+            products: productsId,
+        };
+        const dataToApi = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(customerOrder),
+        };
+        console.log(customerOrder);
+
+        fetch("http://localhost:3000/api/products/order/", dataToApi)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                localStorage.setItem("orderId", data.orderId);
+            })
+            .catch((err) => {
+                alert("Problème avec fetch lors de l'envoi de commande");
+            });
+    });
+}
+postOrder();
