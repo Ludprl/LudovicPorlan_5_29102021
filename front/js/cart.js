@@ -198,7 +198,7 @@ function checkFormOnSubmit() {
             return;
         } else if (charRegExp.test(inputCity.value) == false) {
             cityErrorMsg.innerHTML =
-                "Le Nom ne doit comporter que des lettres, des espaces ou des tirets";
+                "La ville ne doit comporter que des lettres, des espaces ou des tirets";
             cityErrorMsg.style.color = "orange";
             return;
         } else {
@@ -212,13 +212,16 @@ function checkFormOnSubmit() {
             return;
         } else if (emailRegExp.test(inputMail.value) == false) {
             emailErrorMsg.innerHTML =
-                "Le Nom ne doit comporter que des lettres, des espaces ou des tirets";
+                "Veuillez saisir une adresse email valide";
             emailErrorMsg.style.color = "orange";
             return;
         } else {
             emailErrorMsg.innerHTML = "";
         }
+        // Vérification de la présence de produits dans le panier
         if (productsInCart === null || productsInCart == 0) {
+            let cartItems = document.querySelector("#cart__items");
+            cartItems.setAttribute("style", "font-size: 20pt;" + "color: red;");
             return;
         }
         postOrder();
