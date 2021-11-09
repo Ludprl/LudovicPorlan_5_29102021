@@ -13,7 +13,7 @@
 function getProducts() {
     //récupération des données
     return (
-        fetch("http://localhost:3000/api/products")
+        fetch(apiUrl + "/api/products")
             .then(function (httpApiResponse) {
                 // transformation de la réponse en Json
                 return httpApiResponse.json();

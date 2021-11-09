@@ -37,7 +37,7 @@ function getProductId() {
 // on effectue un fetch avec l'id du produit
 function getProduct(productId) {
     return (
-        fetch(`http://localhost:3000/api/products/${productId}`)
+        fetch(apiUrl + "/api/products/" + productId)
             .then(function (httpApiResponse) {
                 // transformation de la réponse en Json
                 return httpApiResponse.json();

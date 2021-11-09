@@ -28,12 +28,20 @@ class cart {
     // récupération des produits du panier
     const productsInCart = await cart.getCart();
     // Affichage de tout les produits contenu dans le panier
-    for (product of productsInCart) {
-        displayCartsProduct(product);
+    if (productsInCart === null || productsInCart == 0) {
+        document.querySelector(
+            "#cart__items"
+        ).innerHTML = `<p>Votre panier est vide</p>`;
+    } else {
+        for (product of productsInCart) {
+            displayCartsProduct(product);
+        }
     }
     onDeleteCartItem();
     onUpdateQuantity();
     totals();
+    validateForm();
+    postOrder();
 })();
 // Affichage du panier
 function displayCartsProduct() {
@@ -121,9 +129,106 @@ function totals() {
         });
     });
 }
+// Validation des inputs du formulaire
+function validateForm() {
+    // Ajout des Regex
+    let form = document.querySelector(".cart__order__form");
+    //Création des expressions régulières
+    let emailRegExp = new RegExp(
+        "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+    );
+    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+    let addressRegExp = new RegExp(
+        "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+    );
+    // Ecoute de la modification du prénom, nom, adresse, ville et email
+    form.firstName.addEventListener("change", function () {
+        validFirstName(this);
+    });
+    form.lastName.addEventListener("change", function () {
+        validLastName(this);
+    });
+    form.address.addEventListener("change", function () {
+        validAddress(this);
+    });
+    form.city.addEventListener("change", function () {
+        validCity(this);
+    });
+    form.email.addEventListener("change", function () {
+        validEmail(this);
+    });
+    let fn = 0;
+    let ln = 0;
+    let ad = 0;
+    let ct = 0;
+    let em = 0;
+
+    //validation du prénom
+    const validFirstName = function (inputFirstName) {
+        let firstNameErrorMsg = inputFirstName.nextElementSibling;
+        if (charRegExp.test(inputFirstName.value)) {
+            firstNameErrorMsg.innerHTML = "";
+            fn = 1;
+        } else {
+            firstNameErrorMsg.innerHTML =
+                "Valeur incorrect, merci de renseigner ce champ";
+            fn = 2;
+        }
+    };
+    //validation du nom
+    const validLastName = function (inputLastName) {
+        let lastNameErrorMsg = inputLastName.nextElementSibling;
+        if (charRegExp.test(inputLastName.value)) {
+            lastNameErrorMsg.innerHTML = "";
+            ln = 1;
+        } else {
+            lastNameErrorMsg.innerHTML =
+                "Valeur incorrect, merci de renseigner ce champ";
+            ln = 2;
+        }
+    };
+    //validation de l'adresse
+    const validAddress = function (inputAddress) {
+        let addressErrorMsg = inputAddress.nextElementSibling;
+        if (addressRegExp.test(inputAddress.value)) {
+            addressErrorMsg.innerHTML = "";
+            ad = 1;
+        } else {
+            addressErrorMsg.innerHTML =
+                "Veuillez renseigner une adresse valide";
+            ad = 2;
+        }
+    };
+    //validation de la ville
+    const validCity = function (inputCity) {
+        let cityErrorMsg = inputCity.nextElementSibling;
+        if (charRegExp.test(inputCity.value)) {
+            cityErrorMsg.innerHTML = "";
+            ct = 1;
+        } else {
+            cityErrorMsg.innerHTML =
+                "Veuillez renseigner un nom de ville valide";
+            ct = 2;
+        }
+    };
+    //validation de l'email
+    const validEmail = function (inputEmail) {
+        let emailErrorMsg = inputEmail.nextElementSibling;
+        if (emailRegExp.test(inputEmail.value)) {
+            emailErrorMsg.innerHTML = "";
+            em = 1;
+        } else {
+            emailErrorMsg.innerHTML = "Veuillez renseigner votre email.";
+            em = 2;
+        }
+    };
+    let allConfirm = fn + ln + ad + ct + em;
+    console.log(allConfirm);
+    return allConfirm;
+}
 
 //Envoi des informations client au localstorage
-async function postOrder() {
+function postOrder() {
     let finalCart = cart.getCart();
     const orderBouton = document.getElementById("order");
     //Déclenchement par le click sur le bouton commander panier
@@ -135,7 +240,6 @@ async function postOrder() {
         let inputAdress = document.getElementById("address");
         let inputCity = document.getElementById("city");
         let inputMail = document.getElementById("email");
-
         //récupération en dans Array des ID produits du panier
         let productsId = finalCart.map((product) => product._id);
         console.log(productsId);
@@ -159,11 +263,7 @@ async function postOrder() {
             },
             body: JSON.stringify(customerOrder),
         };
-
-        let apiResponse = fetch(
-            "http://localhost:3000/api/products/order",
-            dataToApi
-        )
+        fetch(apiUrl + "/api/products/order", dataToApi)
             .then((response) => response.json())
             .then(function (data) {
                 localStorage.clear();
@@ -175,4 +275,3 @@ async function postOrder() {
             });
     });
 }
-postOrder();
