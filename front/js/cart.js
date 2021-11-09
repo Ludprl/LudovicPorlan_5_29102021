@@ -31,6 +31,8 @@ class cart {
         document.querySelector(
             "#cart__items"
         ).innerHTML = `<p>Votre panier est vide</p>`;
+        let formTable = document.querySelector(".cart__order");
+        formTable.setAttribute("style", "display:none");
     } else {
         for (product of productsInCart) {
             displayCartsProduct(product);
