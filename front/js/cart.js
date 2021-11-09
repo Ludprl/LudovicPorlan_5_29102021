@@ -184,7 +184,7 @@ function checkFormOnSubmit() {
             return;
         } else if (addressRegExp.test(inputAdress.value) == false) {
             addressErrorMsg.innerHTML =
-                "Le Nom ne doit comporter que des lettres, des espaces ou des tirets";
+                "L'adresse ne doit comporter que des nombres, des lettres, des espaces ou des tirets";
             addressErrorMsg.style.color = "orange";
             return;
         } else {
