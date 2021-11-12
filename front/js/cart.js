@@ -2,7 +2,7 @@ class cart {
     // récupérer le contenu du panier
     static getCart() {
         let cart = localStorage.getItem("cart");
-        return cart != null ? JSON.parse(cart) : [];
+        return JSON.parse(cart);
     }
     // supprimer un élèment du panier
     static remove(productId, productColor) {
@@ -28,14 +28,14 @@ function main() {
     checkCart();
     onDeleteCartItem();
     onUpdateQuantity();
-    totals();
     checkFormOnSubmit();
+    totals();
 }
 main();
 
 function checkCart() {
     const productsInCart = cart.getCart();
-    if (productsInCart === null || productsInCart == 0) {
+    if (productsInCart == null || productsInCart == 0) {
         document.querySelector(
             "#cart__items"
         ).innerHTML = `<p>Votre panier est vide</p>`;
@@ -51,7 +51,7 @@ function checkCart() {
 function displayCartsProduct() {
     document.getElementById(
         "cart__items"
-    ).innerHTML += `<article id="cart-item-${product._id}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
+    ).innerHTML += `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
     <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
     </div>
@@ -77,13 +77,13 @@ function displayCartsProduct() {
 function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
+            event.preventDefault();
             const productId = event.target.getAttribute("data-id");
             const productColor = event.target.getAttribute("data-color");
-            event.preventDefault();
             cart.remove(productId, productColor);
-            document.getElementById("cart-item-" + productId).remove();
-            totals();
-            checkCart();
+            document
+                .getElementById("cart-item-" + productId + "-" + product.color)
+                .remove();
         });
     });
 }
@@ -99,8 +99,11 @@ function onUpdateQuantity() {
             // Si la quantité saisie est 0 alors on supprime l'article.
             if (productQuantity <= 0) {
                 cart.remove(productId, productColor);
-                document.getElementById("cart-item-" + productId).remove();
-                checkCart();
+                document
+                    .getElementById(
+                        "cart-item-" + productId + "-" + product.color
+                    )
+                    .remove();
             }
         });
     });
@@ -129,6 +132,7 @@ async function totals() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
             totals();
+            location.reload();
         });
     });
 }
