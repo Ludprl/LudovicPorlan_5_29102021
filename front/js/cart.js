@@ -13,11 +13,12 @@ class cart {
         localStorage.setItem("cart", JSON.stringify(cart));
     }
     // modifier les quantités
-    static updateQuantity(productId, productQuantity) {
+    static updateQuantity(productId, productColor, productQuantity) {
         let cart = this.getCart();
-        cart = cart.map((p) => {
-            if (p._id == productId) p.quantity = productQuantity;
-            return p;
+        cart = cart.map((product) => {
+            if (product._id == productId && product.color == productColor)
+                product.quantity = productQuantity;
+            return product;
         });
         localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -94,7 +95,7 @@ function onUpdateQuantity() {
             const productColor = event.target.getAttribute("data-color");
             const productQuantity = event.target.value;
             event.preventDefault();
-            cart.updateQuantity(productId, productQuantity);
+            cart.updateQuantity(productId, productColor, productQuantity);
             // Si la quantité saisie est 0 alors on supprime l'article.
             if (productQuantity <= 0) {
                 cart.remove(productId, productColor);
@@ -264,8 +265,8 @@ function postOrder() {
         .then((response) => response.json())
         .then(function (data) {
             localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-            document.location.href = "confirmation.html";
+            document.location.href =
+                "confirmation.html?orderid=" + data.orderId;
         })
         .catch((err) => {
             alert("Problème avec fetch lors de l'envoi de commande");
