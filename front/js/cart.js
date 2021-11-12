@@ -127,6 +127,7 @@ async function totals() {
     document.querySelectorAll(".itemQuantity").forEach((item) => {
         item.addEventListener("change", (event) => {
             totals();
+            location.reload();
         });
     });
     document.querySelectorAll(".deleteItem").forEach((item) => {
