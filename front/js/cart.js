@@ -4,11 +4,12 @@ class cart {
         let cart = localStorage.getItem("cart");
         return JSON.parse(cart);
     }
+
     // supprimer un élèment du panier
     static remove(productId, productColor) {
         let cart = this.getCart();
         cart = cart.filter(
-            (p) => !(p._id == productId && p.color == productColor)
+            (p) => !(p._id === productId && p.color === productColor)
         );
         localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -25,15 +26,16 @@ class cart {
 }
 
 function main() {
-    checkCart();
+    displayCartsProduct();
+    totals();
     onDeleteCartItem();
     onUpdateQuantity();
     checkFormOnSubmit();
-    totals();
+    updateCart();
 }
 main();
 
-function checkCart() {
+function updateCart() {
     const productsInCart = cart.getCart();
     if (productsInCart == null || productsInCart == 0) {
         document.querySelector(
@@ -41,49 +43,52 @@ function checkCart() {
         ).innerHTML = `<p>Votre panier est vide</p>`;
         let formTable = document.querySelector(".cart__order");
         formTable.setAttribute("style", "display:none");
-    } else {
-        for (product of productsInCart) {
-            displayCartsProduct(product);
-        }
     }
 }
-// Affichage du panier
+
 function displayCartsProduct() {
-    document.getElementById(
-        "cart__items"
-    ).innerHTML += `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
-    <div class="cart__item__img">
-        <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
-    </div>
-    <div class="cart__item__content">
-        <div class="cart__item__content__titlePrice">
-            <h2>${product.name}</h2>
-            <p>${product.price} €</p>
-            <p>${product.color}</p>
-        </div>
-        <div class="cart__item__content__settings">
-            <div class="cart__item__content__settings__quantity">
-                <p>Qté : </p>
-                <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+    let productsInCart = cart.getCart();
+    for (product of productsInCart) {
+        document.getElementById(
+            "cart__items"
+        ).innerHTML += `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
+            <div class="cart__item__img">
+                <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
             </div>
-            <div class="cart__item__content__settings__delete">
-                <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
+            <div class="cart__item__content">
+                <div class="cart__item__content__titlePrice">
+                    <h2>${product.name}</h2>
+                    <p>${product.price} €</p>
+                    <p>${product.color}</p>
+                </div>
+                <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                        <p>Qté : </p>
+                        <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                        <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</article>`;
+        </article>`;
+    }
 }
+
 // On supprime l'element du panier lors du clique sur le bouton "supprimer"
 function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
             event.preventDefault();
-            const productId = event.target.getAttribute("data-id");
-            const productColor = event.target.getAttribute("data-color");
+            let productId = event.target.getAttribute("data-id");
+            let productColor = event.target.getAttribute("data-color");
+            let toRemove = document.getElementById(
+                "cart-item-" + productId + "-" + productColor
+            );
+            console.log(toRemove, productColor, productId);
+            toRemove.remove();
             cart.remove(productId, productColor);
-            document
-                .getElementById("cart-item-" + productId + "-" + product.color)
-                .remove();
+            updateCart();
         });
     });
 }
@@ -101,7 +106,7 @@ function onUpdateQuantity() {
                 cart.remove(productId, productColor);
                 document
                     .getElementById(
-                        "cart-item-" + productId + "-" + product.color
+                        "cart-item-" + productId + "-" + productColor
                     )
                     .remove();
             }
@@ -127,13 +132,11 @@ async function totals() {
     document.querySelectorAll(".itemQuantity").forEach((item) => {
         item.addEventListener("change", (event) => {
             totals();
-            location.reload();
         });
     });
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
             totals();
-            location.reload();
         });
     });
 }
