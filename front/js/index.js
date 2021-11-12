@@ -34,7 +34,7 @@ function displayProduct() {
         "items"
     ).innerHTML += `<a href="product.html?id=${product._id}">
     <article>
-        <img src="${product.imageUrl}" alt="Photographie d'un canapé Kanap ${product.name}">
+        <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
         <h3>${product.name}</h3>
         <p>${product.description}</p>
     </article>

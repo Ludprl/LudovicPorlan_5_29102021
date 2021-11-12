@@ -8,7 +8,7 @@ class cart {
     static remove(productId, productColor) {
         let cart = this.getCart();
         cart = cart.filter(
-            (p) => p._id !== productId && p.color !== productColor
+            (p) => !(p._id == productId && p.color == productColor)
         );
         localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -64,7 +64,7 @@ function displayCartsProduct() {
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
                 <p>Qté : </p>
-                <input type="number" data-id="${product._id}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
             </div>
             <div class="cart__item__content__settings__delete">
                 <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
@@ -105,22 +105,19 @@ function onUpdateQuantity() {
         });
     });
 }
-function totals() {
-    let finalCart = cart.getCart();
-    // Récupération du total des quantités
-    let totalProductsInCart = document.getElementsByClassName("itemQuantity");
-    let customerLength = totalProductsInCart.length,
-        totalQtt = 0;
-    for (let i = 0; i < customerLength; ++i) {
-        totalQtt += totalProductsInCart[i].valueAsNumber;
+async function totals() {
+    let finalCart = await cart.getCart();
+    // Récupération du total des quantités et du prix total
+    let totalQuantity = 0;
+    let totalPrice = 0;
+    for (let i = 0; i < finalCart.length; ++i) {
+        totalQuantity += parseInt(finalCart[i].quantity);
+        totalPrice +=
+            parseFloat(finalCart[i].price) * parseInt(finalCart[i].quantity);
     }
     let productsTotalQuantity = document.getElementById("totalQuantity");
-    productsTotalQuantity.innerHTML = totalQtt;
-    // Récupération du prix total
-    totalPrice = 0;
-    for (let i = 0; i < customerLength; ++i) {
-        totalPrice += totalProductsInCart[i].valueAsNumber * finalCart[i].price;
-    }
+    productsTotalQuantity.innerHTML = totalQuantity;
+    // Affichage du prix total
     let productsTotalPrice = document.getElementById("totalPrice");
     productsTotalPrice.innerHTML = totalPrice;
     // Mise à jour prix total si changement de quantité ou suppression d'un produit
@@ -240,7 +237,6 @@ function postOrder() {
     let inputMail = document.getElementById("email");
     //récupération en dans Array des ID produits du panier
     let productsId = finalCart.map((product) => product._id);
-    console.log(productsId);
     // récupération des données
     const customerOrder = {
         contact: {
