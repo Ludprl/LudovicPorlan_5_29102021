@@ -113,9 +113,9 @@ function onUpdateQuantity() {
         });
     });
 }
+// Collect et calcul dynamique des totaux du panier
 async function totals() {
     let finalCart = await cart.getCart();
-    // Récupération du total des quantités et du prix total
     let totalQuantity = 0;
     let totalPrice = 0;
     for (let i = 0; i < finalCart.length; ++i) {
@@ -123,6 +123,7 @@ async function totals() {
         totalPrice +=
             parseFloat(finalCart[i].price) * parseInt(finalCart[i].quantity);
     }
+    // Récupération du total des quantités et du prix total
     let productsTotalQuantity = document.getElementById("totalQuantity");
     productsTotalQuantity.innerHTML = totalQuantity;
     // Affichage du prix total
@@ -141,6 +142,9 @@ async function totals() {
     });
 }
 
+// Verification du formulaire onSubmit > Passage aux RegExp.
+// La fonction s'arrete si un des champ est invalide.
+// Sinon postOrder();
 function checkFormOnSubmit() {
     const orderBouton = document.getElementById("order");
     orderBouton.addEventListener("click", (event) => {
@@ -196,8 +200,7 @@ function checkFormOnSubmit() {
             addressErrorMsg.style.color = "red";
             return;
         } else if (addressRegExp.test(inputAdress.value) == false) {
-            addressErrorMsg.innerHTML =
-                "L'adresse ne doit comporter que des nombres, des lettres, des espaces ou des tirets";
+            addressErrorMsg.innerHTML = "Veuillez entrer une adresse valide";
             addressErrorMsg.style.color = "orange";
             return;
         } else {
@@ -234,7 +237,7 @@ function checkFormOnSubmit() {
         postOrder();
     });
 }
-//Envoi des informations client au localstorage
+//Envoi des informations client + Panier au localstorage
 function postOrder() {
     let finalCart = cart.getCart();
     //Récupération des informations client
@@ -245,7 +248,7 @@ function postOrder() {
     let inputMail = document.getElementById("email");
     //récupération en dans Array des ID produits du panier
     let productsId = finalCart.map((product) => product._id);
-    // récupération des données
+    // récupération des données du panier + fomulaire.
     const customerOrder = {
         contact: {
             firstName: inputName.value,
