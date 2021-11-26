@@ -80,15 +80,20 @@ function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
             event.preventDefault();
-            let productId = event.target.getAttribute("data-id");
-            let productColor = event.target.getAttribute("data-color");
-            let toRemove = document.getElementById(
-                "cart-item-" + productId + "-" + productColor
-            );
-            console.log(toRemove, productColor, productId);
-            toRemove.remove();
-            cart.remove(productId, productColor);
-            updateCart();
+            if (
+                window.confirm(
+                    "Souhaitez-vous supprimer cet article de votre panier ?"
+                )
+            ) {
+                let productId = event.target.getAttribute("data-id");
+                let productColor = event.target.getAttribute("data-color");
+                let toRemove = document.getElementById(
+                    "cart-item-" + productId + "-" + productColor
+                );
+                toRemove.remove();
+                cart.remove(productId, productColor);
+                updateCart();
+            }
         });
     });
 }
