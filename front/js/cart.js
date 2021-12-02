@@ -31,52 +31,53 @@ function main() {
     onDeleteCartItem();
     onUpdateQuantity();
     checkFormOnSubmit();
-    updateCart();
 }
 main();
 
-function updateCart() {
-    const productsInCart = cart.getCart();
+// Affichage des produits contenu dans le panier.
+// Si aucun produit est présent, on informe l'utilisateur et on cache le formulaire de commande.
+function displayCartsProduct() {
+    let productsInCart = cart.getCart();
     if (productsInCart == null || productsInCart == 0) {
         document
             .querySelector("#cart__items")
             .insertAdjacentHTML("beforeend", `<p>Votre panier est vide</p>`);
-        let formTable = document.querySelector(".cart__order");
-        formTable.setAttribute("style", "display:none");
-    }
-}
-
-function displayCartsProduct() {
-    let productsInCart = cart.getCart();
-    for (product of productsInCart) {
-        document.getElementById("cart__items").insertAdjacentHTML(
-            "beforeend",
-            `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
-            <div class="cart__item__img">
-                <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
-            </div>
-            <div class="cart__item__content">
-                <div class="cart__item__content__titlePrice">
-                    <h2>${product.name}</h2>
-                    <p>${product.price} €</p>
-                    <p>${product.color}</p>
+        document
+            .querySelector(".cart__order")
+            .setAttribute("style", "display:none");
+        localStorage.setItem("cart", JSON.stringify([]));
+    } else {
+        for (product of productsInCart) {
+            document.getElementById("cart__items").insertAdjacentHTML(
+                "beforeend",
+                `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
+                <div class="cart__item__img">
+                    <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
                 </div>
-                <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                        <p>Qté : </p>
-                        <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                <div class="cart__item__content">
+                    <div class="cart__item__content__titlePrice">
+                        <h2>${product.name}</h2>
+                        <p>${product.price} €</p>
+                        <p>${product.color}</p>
                     </div>
-                    <div class="cart__item__content__settings__delete">
-                        <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
+                    <div class="cart__item__content__settings">
+                        <div class="cart__item__content__settings__quantity">
+                            <p>Qté : </p>
+                            <input type="number" data-id="${product._id}" data-color="${product.color}" class="itemQuantity" onchange="onUpdateQuantity()" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                        </div>
+                        <div class="cart__item__content__settings__delete">
+                            <a href="#" class="deleteItem" data-id="${product._id}" data-color="${product.color}">Supprimer</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </article>`
-        );
+            </article>`
+            );
+        }
     }
 }
 
 // On supprime l'element du panier lors du clique sur le bouton "supprimer"
+// Un message demande confirmation à l'utilisateur
 function onDeleteCartItem() {
     document.querySelectorAll(".deleteItem").forEach((item) => {
         item.addEventListener("click", (event) => {
@@ -93,7 +94,7 @@ function onDeleteCartItem() {
                 );
                 toRemove.remove();
                 cart.remove(productId, productColor);
-                updateCart();
+                displayCartsProduct();
             }
         });
     });
@@ -115,7 +116,7 @@ function onUpdateQuantity() {
                         "cart-item-" + productId + "-" + productColor
                     )
                     .remove();
-                updateCart();
+                displayCartsProduct();
             }
         });
     });
