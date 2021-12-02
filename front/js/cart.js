@@ -177,12 +177,9 @@ function checkFormOnSubmit() {
             let firstNameErrorMsg =
                 document.getElementById("firstNameErrorMsg");
             firstNameErrorMsg.innerHTML = "Le champ Prénom est requis";
-            firstNameErrorMsg.style.color = "red";
             return;
         } else if (charRegExp.test(inputName.value) == false) {
-            firstNameErrorMsg.innerHTML =
-                "Le prénom ne doit comporter que des lettres, des espaces ou des tirets";
-            firstNameErrorMsg.style.color = "orange";
+            firstNameErrorMsg.innerHTML = "Veuillez saisir un prénom valide";
             return;
         } else {
             firstNameErrorMsg.innerHTML = "";
@@ -191,12 +188,9 @@ function checkFormOnSubmit() {
         if (inputLastName.value.trim() == "") {
             let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
             lastNameErrorMsg.innerHTML = "Le champ Nom est requis";
-            lastNameErrorMsg.style.color = "red";
             return;
         } else if (charRegExp.test(inputLastName.value) == false) {
-            lastNameErrorMsg.innerHTML =
-                "Le Nom ne doit comporter que des lettres, des espaces ou des tirets";
-            lastNameErrorMsg.style.color = "orange";
+            lastNameErrorMsg.innerHTML = "Veuillez saisir un nom valide";
             return;
         } else {
             lastNameErrorMsg.innerHTML = "";
@@ -205,11 +199,9 @@ function checkFormOnSubmit() {
         if (inputAdress.value.trim() == "") {
             let addressErrorMsg = document.getElementById("addressErrorMsg");
             addressErrorMsg.innerHTML = "Le champ Adresse est requis";
-            addressErrorMsg.style.color = "red";
             return;
         } else if (addressRegExp.test(inputAdress.value) == false) {
             addressErrorMsg.innerHTML = "Veuillez entrer une adresse valide";
-            addressErrorMsg.style.color = "orange";
             return;
         } else {
             addressErrorMsg.innerHTML = "";
@@ -218,12 +210,9 @@ function checkFormOnSubmit() {
         if (inputCity.value.trim() == "") {
             let cityErrorMsg = document.getElementById("cityErrorMsg");
             cityErrorMsg.innerHTML = "Le champ Ville est requis";
-            cityErrorMsg.style.color = "red";
             return;
         } else if (charRegExp.test(inputCity.value) == false) {
-            cityErrorMsg.innerHTML =
-                "La ville ne doit comporter que des lettres, des espaces ou des tirets";
-            cityErrorMsg.style.color = "orange";
+            cityErrorMsg.innerHTML = "Veuillez saisir un nom de ville valide";
             return;
         } else {
             cityErrorMsg.innerHTML = "";
@@ -232,12 +221,10 @@ function checkFormOnSubmit() {
         if (inputMail.value.trim() == "") {
             let emailErrorMsg = document.getElementById("emailErrorMsg");
             emailErrorMsg.innerHTML = "Le champ Email est requis";
-            emailErrorMsg.style.color = "red";
             return;
         } else if (emailRegExp.test(inputMail.value) == false) {
             emailErrorMsg.innerHTML =
                 "Veuillez saisir une adresse email valide";
-            emailErrorMsg.style.color = "orange";
             return;
         } else {
             emailErrorMsg.innerHTML = "";
