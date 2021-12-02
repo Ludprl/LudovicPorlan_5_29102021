@@ -38,9 +38,9 @@ main();
 function updateCart() {
     const productsInCart = cart.getCart();
     if (productsInCart == null || productsInCart == 0) {
-        document.querySelector(
-            "#cart__items"
-        ).innerHTML = `<p>Votre panier est vide</p>`;
+        document
+            .querySelector("#cart__items")
+            .insertAdjacentHTML("beforeend", `<p>Votre panier est vide</p>`);
         let formTable = document.querySelector(".cart__order");
         formTable.setAttribute("style", "display:none");
     }
@@ -49,9 +49,9 @@ function updateCart() {
 function displayCartsProduct() {
     let productsInCart = cart.getCart();
     for (product of productsInCart) {
-        document.getElementById(
-            "cart__items"
-        ).innerHTML += `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
+        document.getElementById("cart__items").insertAdjacentHTML(
+            "beforeend",
+            `<article id="cart-item-${product._id}-${product.color}" class="cart__item" data-id="${product._id}" data-color="${product.color}">
             <div class="cart__item__img">
                 <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
             </div>
@@ -71,7 +71,8 @@ function displayCartsProduct() {
                     </div>
                 </div>
             </div>
-        </article>`;
+        </article>`
+        );
     }
 }
 
@@ -114,6 +115,7 @@ function onUpdateQuantity() {
                         "cart-item-" + productId + "-" + productColor
                     )
                     .remove();
+                updateCart();
             }
         });
     });
