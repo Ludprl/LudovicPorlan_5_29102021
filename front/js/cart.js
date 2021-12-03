@@ -133,10 +133,10 @@ async function totals() {
     }
     // Récupération du total des quantités et du prix total
     let productsTotalQuantity = document.getElementById("totalQuantity");
-    productsTotalQuantity.innerHTML = totalQuantity;
+    productsTotalQuantity.innerText = totalQuantity;
     // Affichage du prix total
     let productsTotalPrice = document.getElementById("totalPrice");
-    productsTotalPrice.innerHTML = totalPrice;
+    productsTotalPrice.innerText = totalPrice;
     // Mise à jour prix total si changement de quantité ou suppression d'un produit
     document.querySelectorAll(".itemQuantity").forEach((item) => {
         item.addEventListener("change", (event) => {
@@ -176,58 +176,58 @@ function checkFormOnSubmit() {
         if (inputName.value.trim() == "") {
             let firstNameErrorMsg =
                 document.getElementById("firstNameErrorMsg");
-            firstNameErrorMsg.innerHTML = "Le champ Prénom est requis";
+            firstNameErrorMsg.innerText = "Le champ Prénom est requis";
             return;
         } else if (charRegExp.test(inputName.value) == false) {
-            firstNameErrorMsg.innerHTML = "Veuillez saisir un prénom valide";
+            firstNameErrorMsg.innerText = "Veuillez saisir un prénom valide";
             return;
         } else {
-            firstNameErrorMsg.innerHTML = "";
+            firstNameErrorMsg.innerText = "";
         }
         // vérification du nom
         if (inputLastName.value.trim() == "") {
             let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-            lastNameErrorMsg.innerHTML = "Le champ Nom est requis";
+            lastNameErrorMsg.innerText = "Le champ Nom est requis";
             return;
         } else if (charRegExp.test(inputLastName.value) == false) {
-            lastNameErrorMsg.innerHTML = "Veuillez saisir un nom valide";
+            lastNameErrorMsg.innerText = "Veuillez saisir un nom valide";
             return;
         } else {
-            lastNameErrorMsg.innerHTML = "";
+            lastNameErrorMsg.innerText = "";
         }
         // validation de l'adresse
         if (inputAdress.value.trim() == "") {
             let addressErrorMsg = document.getElementById("addressErrorMsg");
-            addressErrorMsg.innerHTML = "Le champ Adresse est requis";
+            addressErrorMsg.innerText = "Le champ Adresse est requis";
             return;
         } else if (addressRegExp.test(inputAdress.value) == false) {
-            addressErrorMsg.innerHTML = "Veuillez entrer une adresse valide";
+            addressErrorMsg.innerText = "Veuillez entrer une adresse valide";
             return;
         } else {
-            addressErrorMsg.innerHTML = "";
+            addressErrorMsg.innerText = "";
         }
         // validation de la ville
         if (inputCity.value.trim() == "") {
             let cityErrorMsg = document.getElementById("cityErrorMsg");
-            cityErrorMsg.innerHTML = "Le champ Ville est requis";
+            cityErrorMsg.innerText = "Le champ Ville est requis";
             return;
         } else if (charRegExp.test(inputCity.value) == false) {
-            cityErrorMsg.innerHTML = "Veuillez saisir un nom de ville valide";
+            cityErrorMsg.innerText = "Veuillez saisir un nom de ville valide";
             return;
         } else {
-            cityErrorMsg.innerHTML = "";
+            cityErrorMsg.innerText = "";
         }
         // validation de l'email
         if (inputMail.value.trim() == "") {
             let emailErrorMsg = document.getElementById("emailErrorMsg");
-            emailErrorMsg.innerHTML = "Le champ Email est requis";
+            emailErrorMsg.innerText = "Le champ Email est requis";
             return;
         } else if (emailRegExp.test(inputMail.value) == false) {
-            emailErrorMsg.innerHTML =
+            emailErrorMsg.innerText =
                 "Veuillez saisir une adresse email valide";
             return;
         } else {
-            emailErrorMsg.innerHTML = "";
+            emailErrorMsg.innerText = "";
         }
         postOrder();
     });
