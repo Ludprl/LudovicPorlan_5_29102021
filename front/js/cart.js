@@ -122,7 +122,7 @@ function onUpdateQuantity() {
                         "cart-item-" + productId + "-" + productColor
                     )
                     .remove();
-                displayCartsProduct();
+                checkCart();
             }
         });
     });
