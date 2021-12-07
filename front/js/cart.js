@@ -94,7 +94,6 @@ function onDeleteCartItem() {
                 );
                 toRemove.remove();
                 cart.remove(productId, productColor);
-                displayCartsProduct();
             }
         });
     });
