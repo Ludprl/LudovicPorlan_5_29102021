@@ -39,13 +39,7 @@ main();
 function displayCartsProduct() {
     let productsInCart = cart.getCart();
     if (productsInCart == null || productsInCart == 0) {
-        document
-            .querySelector("#cart__items")
-            .insertAdjacentHTML("beforeend", `<p>Votre panier est vide</p>`);
-        document
-            .querySelector(".cart__order")
-            .setAttribute("style", "display:none");
-        localStorage.setItem("cart", JSON.stringify([]));
+        checkCart();
     } else {
         for (product of productsInCart) {
             document.getElementById("cart__items").insertAdjacentHTML(
@@ -75,6 +69,18 @@ function displayCartsProduct() {
         }
     }
 }
+function checkCart() {
+    let productsInCart = cart.getCart();
+    if (productsInCart == null || productsInCart == 0) {
+        document
+            .querySelector("#cart__items")
+            .insertAdjacentHTML("beforeend", `<p>Votre panier est vide</p>`);
+        document
+            .querySelector(".cart__order")
+            .setAttribute("style", "display:none");
+        localStorage.setItem("cart", JSON.stringify([]));
+    }
+}
 
 // On supprime l'element du panier lors du clique sur le bouton "supprimer"
 // Un message demande confirmation à l'utilisateur
@@ -94,6 +100,7 @@ function onDeleteCartItem() {
                 );
                 toRemove.remove();
                 cart.remove(productId, productColor);
+                checkCart();
             }
         });
     });
